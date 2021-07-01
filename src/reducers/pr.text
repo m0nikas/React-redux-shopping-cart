@@ -1,0 +1,99 @@
+{ 
+          console.log(state.items);
+          console.log(action.id);
+          let addedItem = state.items.find(item=> item.id === action.id)
+          //check if the action id exists in the addedItems
+          console.log(addedItem);
+          console.log(state.addedItems);
+          if(state.addedItems){
+             var existed_item= state.addedItems.find(item=> action.id === item.id)
+          }
+          if(existed_item)
+          {
+            addedItem.quantity += 1 
+             return{
+                ...state,
+                 total: state.total + parseInt((addedItem.price),10)
+                  }
+          }
+          else{
+            addedItem.quantity = 1;
+            //calculating the total
+            let newTotal = state.total + parseInt((addedItem.price),10)
+            console.log(addedItem);
+            console.log(newTotal);
+            console.log(addedItem.price);
+            console.log(state.addedItems);
+            
+            
+            return{
+              ...state,
+              addedItems: [...state.addedItems, addedItem],
+              total : newTotal
+          }
+
+
+
+
+
+
+
+          import React, { useEffect } from "react";
+import { connect } from "react-redux";
+import {fetchProducts} from "../actions/product-actions"
+import ProductCard from '../components/productCard';
+
+const Products = (props) => {
+    
+    const {fetchProducts,products}=props;
+    useEffect(()=>{
+      fetchProducts()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+    let list=null;
+    if(products instanceof Array && products.length >0 ) {
+    list = products.map(c => <ProductCard key={c.id} product={c} />)
+    }
+    return ( 
+      <div className="container">
+          <h3>Product List</h3>
+          {list}
+      </div>
+  );
+    }
+//      return (
+//         <>
+//         <ul className="products">         
+//             {products.map((product)=>( 
+//                 <li key={product.name}>
+//                 <div className="product">
+//                   <a href={"/products/" + product.id} >
+//                     <img src={product.imageURL} alt={product.name}  style={{ width: "200px", height: "200px" }}></img>
+//                     <p>{product.description}</p>
+//                   </a>
+//                   <div className="product-price">
+//                   <button
+//                         onClick={() =>addToCart(product)}
+//                         className="button primary"
+//                       >
+//                         Add To Cart
+//                       </button>
+//                       <div>{formatCurrency(product.price)}</div>
+                    
+//                     </div>
+//                 </div>
+//               </li>
+            
+                               
+//             ))}
+//            </ul> 
+//           </>
+//      );
+// }
+
+export default connect(
+    (state) => ({ products: state.products.items }),
+    {
+      fetchProducts
+    }
+  )(Products);
